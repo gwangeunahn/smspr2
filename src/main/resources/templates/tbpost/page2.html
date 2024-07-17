@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+TbPost
+<br>
+<a href="/tbpost/page1"> Page1 이동</a>
+
+<br>
+<input type="text" id="tbpost_order" />
+<button onclick="detail_tbpost()">조회</button>
+<div id="div_tbpost_detail"></div>
+
+<br>제목
+<input type="text" id="tbpost_uptitle"/>
+
+<br>내용
+<input type="text" id="tbpost_upcontent"/>
+
+<br>
+<button onclick="update_tbpost()">수정</button>
+
+<script>
+    function detail_tbpost(){
+        $.ajax({
+            url: "/api/tbpost/detail/" + $("#tbpost_order").val(),
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {},
+            cache: false,
+            success: (data, status, xhr)=>{
+                alert(JSON.stringify("reultCode:" + data.resultCode));
+                let tbpost = data.data;
+                $("#div_tbpost_detail").append(
+                    "<div>" + "no." + tbpost.order + "<br> Title: " +tbpost.title + "(" + tbpost.writer + ")" +
+                    "<br>" + tbpost.content + "</div>"
+                );
+                $("#tbpost_uptitle").val(tbpost.title);
+                $("#tbpost_upcontent").val(tbpost.content);
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            },
+        });
+    }
+
+    function update_tbpost(){
+        $.ajax({
+            url: "/api/tbpost/update",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                order : $("#tbpost_order").val(),
+                title : $("#tbpost_uptitle").val(),
+                content : $("#tbpost_upcontent").val()
+            },
+            cache: false,
+            success: (data, status, xhr)=>{
+                alert(JSON.stringify(data));
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            },
+        });
+    }
+</script>
+</body>
+</html>

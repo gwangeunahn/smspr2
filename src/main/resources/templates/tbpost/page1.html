@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+TbPost
+<br>
+<a href="/tbpost/page2"> Page2 이동</a>
+
+<br>
+글쓴이
+<input type="text" id="tbpost_writer" />
+
+<br>
+제목
+<input type="text" id="tbpost_title" />
+
+<br>
+내용
+<input type="text" id="tbpost_content" />
+
+<br>
+<button onclick="create_tbpost()">등록</button>
+
+<button onclick="list_tbpost()">목록</button>
+<div id="div_tbpost_list"></div>
+
+<script>
+
+  function create_tbpost(){
+    $.ajax({
+      url: "/api/tbpost/create",
+      type: "GET",
+      contentType : 'application/json; charset=utf-8',
+      data: {
+          writer : $("#tbpost_writer").val(),
+          title : $("#tbpost_title").val(),
+          content : $("#tbpost_content").val()
+      },
+      cache: false,
+      success: (data, status, xhr)=>{
+        alert(JSON.stringify(data));
+      },
+      error: (data, status, xhr)=>{
+        alert("error!!");
+        alert(JSON.stringify(data));
+      },
+    });
+  }
+
+  function list_tbpost(){
+      $.ajax({
+          url: "/api/tbpost/list",
+          type: "GET",
+          contentType : 'application/json; charset=utf-8',
+          data: {},
+          cache: false,
+          success: (data, status, xhr)=>{
+              let alist = data.data;
+              for(each of alist){
+                  $("#div_tbpost_list").append(
+                      "<div><a href='/tbpost/page2/" + each.order + "'>" + "No." + each.order + " Title: " +each.title + "</div>"
+                  );
+              }
+          },
+          error: (data, status, xhr)=>{
+              alert("error!!");
+              alert(JSON.stringify(data));
+          },
+      });
+  }
+
+</script>
+</body>
+</html>
